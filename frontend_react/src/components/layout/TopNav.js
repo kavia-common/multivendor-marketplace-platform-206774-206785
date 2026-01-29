@@ -3,9 +3,11 @@ import { useAuth } from "../../state/AuthContext";
 import { Button } from "../ui/Button";
 
 // PUBLIC_INTERFACE
-export function TopNav({ onToggleSidebar, theme, onToggleTheme }) {
-  /** Top navigation bar with role switcher (placeholder for real auth) and theme toggle. */
-  const { role, roleLabel, setRole, user } = useAuth();
+export function TopNav({ onToggleSidebar, theme, onToggleTheme, onOpenAuth }) {
+  /** Top navigation bar with auth actions and theme toggle. */
+  const { isAuthenticated, roleLabel, user, logout, refreshMe, authStatus } = useAuth();
+
+  const displayName = user?.name || user?.email || "Guest";
 
   return (
     <header className="topnav" role="banner">
@@ -25,28 +27,44 @@ export function TopNav({ onToggleSidebar, theme, onToggleTheme }) {
       </div>
 
       <div className="topnav-right">
-        <div className="role-switcher" aria-label="Role switcher">
-          <span className="role-pill" title="Current role">
+        <div className="role-switcher" aria-label="Role">
+          <span className="role-pill" title="Role from backend">
             {roleLabel}
           </span>
-          <select
-            className="select"
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-            aria-label="Select role"
-          >
-            <option value="customer">Customer</option>
-            <option value="vendor">Vendor</option>
-            <option value="admin">Admin</option>
-          </select>
         </div>
 
-        <div className="user-pill" title="Signed in user (placeholder)">
-          {user?.name || "Guest"}
+        <div className="user-pill" title="Signed in user">
+          {displayName}
         </div>
+
+        {isAuthenticated ? (
+          <>
+            <Button
+              variant="ghost"
+              onClick={() => refreshMe()}
+              disabled={authStatus.state === "loading"}
+              aria-label="Refresh current user"
+              title="GET /api/v1/auth/me"
+            >
+              {authStatus.state === "loading" ? "Refreshing…" : "Refresh Me"}
+            </Button>
+            <Button variant="secondary" onClick={logout} aria-label="Logout">
+              Logout
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button variant="primary" onClick={() => onOpenAuth("login")} aria-label="Login">
+              Login
+            </Button>
+            <Button variant="secondary" onClick={() => onOpenAuth("register")} aria-label="Register">
+              Register
+            </Button>
+          </>
+        )}
 
         <Button
-          variant="secondary"
+          variant="ghost"
           onClick={onToggleTheme}
           aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
         >
@@ -56,4 +74,3 @@ export function TopNav({ onToggleSidebar, theme, onToggleTheme }) {
     </header>
   );
 }
-

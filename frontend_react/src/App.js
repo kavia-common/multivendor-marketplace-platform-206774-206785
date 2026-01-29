@@ -5,6 +5,7 @@ import { TopNav } from "./components/layout/TopNav";
 import { Sidebar } from "./components/layout/Sidebar";
 import { HomePage } from "./pages/HomePage";
 import { PlaceholderPage } from "./pages/PlaceholderPage";
+import { AuthModal } from "./components/auth/AuthModal";
 
 function PageRouter({ activeKey }) {
   const { roleLabel } = useAuth();
@@ -47,10 +48,12 @@ function PageRouter({ activeKey }) {
 
 // PUBLIC_INTERFACE
 function AppShell() {
-  /** Main application shell with retro styling, role switcher, and sidebar navigation. */
+  /** Main application shell with retro styling, auth modal, and sidebar navigation. */
   const [theme, setTheme] = useState("light");
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeKey, setActiveKey] = useState("home");
+
+  const [authModal, setAuthModal] = useState({ open: false, mode: "login" });
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
@@ -62,6 +65,7 @@ function AppShell() {
         theme={theme}
         onToggleTheme={() => setTheme((t) => (t === "light" ? "dark" : "light"))}
         onToggleSidebar={() => setSidebarOpen((v) => !v)}
+        onOpenAuth={(mode) => setAuthModal({ open: true, mode })}
       />
 
       <div className="layout">
@@ -71,6 +75,13 @@ function AppShell() {
           <PageRouter activeKey={activeKey} />
         </main>
       </div>
+
+      <AuthModal
+        isOpen={authModal.open}
+        mode={authModal.mode}
+        onClose={() => setAuthModal((s) => ({ ...s, open: false }))}
+        onModeChange={(mode) => setAuthModal((s) => ({ ...s, mode }))}
+      />
     </div>
   );
 }
@@ -86,4 +97,3 @@ function App() {
 }
 
 export default App;
-

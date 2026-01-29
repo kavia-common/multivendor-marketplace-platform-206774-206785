@@ -383,6 +383,61 @@
   color: var(--text-primary);
 }
 
+.form {
+  display: grid;
+  gap: 12px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(10, 12, 18, 0.55);
+  backdrop-filter: blur(6px);
+}
+
+.modal {
+  width: min(560px, calc(100vw - 28px));
+}
+
+.modal-card .card-body {
+  padding: 14px;
+}
+
+.callout {
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: color-mix(in oklab, var(--surface) 92%, transparent);
+  padding: 12px;
+}
+
+.callout-title {
+  font-weight: 900;
+  letter-spacing: 0.2px;
+  margin-bottom: 6px;
+}
+
+.callout-body {
+  color: var(--text-primary);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.callout-error {
+  border-color: color-mix(in oklab, var(--danger) 55%, var(--border));
+  background: color-mix(in oklab, var(--danger) 9%, var(--surface));
+}
+
 @media (max-width: 980px) {
   .layout {
     grid-template-columns: 1fr;
